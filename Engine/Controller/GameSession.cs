@@ -27,6 +27,8 @@ namespace Engine.Controller
                 onPropertyChanged(nameof(HasLocationToSouth));
                 onPropertyChanged(nameof(HasLocationToWest));
                 onPropertyChanged(nameof(HasLocationToEast));
+
+                GivePlayerQuestAtLocation();
             }
         }
         public bool HasLocationToNorth
@@ -109,6 +111,17 @@ namespace Engine.Controller
             if(HasLocationToEast)
             {
                 CurrentLocation = CurrentWorld.LocationAt(CurrentLocation.XCoordinate + 1, CurrentLocation.YCoordinate);
+            }
+        }
+
+        public void GivePlayerQuestAtLocation()
+        {
+            foreach(Quest quest in CurrentLocation.QuestAvailableHere)
+            {
+                if(!CurrentPlayer.Quests.Any(q => q.PlayerQuest.ID == quest.ID))
+                {
+                    CurrentPlayer.Quests.Add(new QuestStatus(quest));
+                }
             }
         }
     }
