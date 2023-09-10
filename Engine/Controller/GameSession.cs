@@ -1,25 +1,115 @@
-﻿using Engine.Models;
+﻿using Engine.Factories;
+using Engine.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Engine.Controller
 {
-    public class GameSession
+    public class GameSession: BaseNotification
     {
+        private Location _currentLocation;
         public Player CurrentPlayer { get; set; }
+        public Location CurrentLocation
+        {
+            get
+            {
+                return _currentLocation;
+            }
+            set
+            {
+                _currentLocation = value;
+                onPropertyChanged(nameof(CurrentLocation));
+                onPropertyChanged(nameof(HasLocationToNorth));
+                onPropertyChanged(nameof(HasLocationToSouth));
+                onPropertyChanged(nameof(HasLocationToWest));
+                onPropertyChanged(nameof(HasLocationToEast));
+            }
+        }
+        public bool HasLocationToNorth
+        {
+            get
+            {
+                return CurrentWorld.LocationAt(CurrentLocation.XCoordinate, CurrentLocation.YCoordinate + 1) != null;
+            }
+        }
+        public bool HasLocationToSouth
+        {
+            get
+            {
+                return CurrentWorld.LocationAt(CurrentLocation.XCoordinate, CurrentLocation.YCoordinate - 1) != null;
+            }
+        }
+        public bool HasLocationToWest
+        {
+            get
+            {
+                return CurrentWorld.LocationAt(CurrentLocation.XCoordinate - 1, CurrentLocation.YCoordinate) != null;
+            }
+        }
+        public bool HasLocationToEast
+        {
+            get
+            {
+                return CurrentWorld.LocationAt(CurrentLocation.XCoordinate + 1, CurrentLocation.YCoordinate) != null;
+            }
+        }
+
+        public World CurrentWorld { get; set; }
 
         public GameSession()
         {
-            CurrentPlayer = new Player();
-            CurrentPlayer.Name = "Abu";
-            CurrentPlayer.Category = "Fighter";
-            CurrentPlayer.ExperiencePoints = 10;
-            CurrentPlayer.HitPoints = 20;
-            CurrentPlayer.Level = 1;
-            CurrentPlayer.Gold = 100000;
+            CurrentPlayer = new Player()
+            {
+                Name = "Abu",
+                Category = "Fighter",
+                ExperiencePoints = 1,
+                HitPoints = 10,
+                Level = 1,
+                Gold = 10000,
+            };
+
+            CurrentWorld = WorldFactory.CreateWorld();
+            CurrentLocation = CurrentWorld.LocationAt(0, 0);
+
+            CurrentPlayer.Inventory.Add(GameItemFactory.CreateGameItem(1002));
+            CurrentPlayer.Inventory.Add(GameItemFactory.CreateGameItem(1001));
+            CurrentPlayer.Inventory.Add(GameItemFactory.CreateGameItem(1002));
+        }
+
+        public void MoveNorth()
+        {
+            if (HasLocationToNorth)
+            {
+                CurrentLocation = CurrentWorld.LocationAt(CurrentLocation.XCoordinate, CurrentLocation.YCoordinate + 1);
+            }
+        }
+
+        public void MoveSouth()
+        {
+            if (HasLocationToSouth)
+            {
+                CurrentLocation = CurrentWorld.LocationAt(CurrentLocation.XCoordinate, CurrentLocation.YCoordinate - 1);
+            }
+        }
+
+        public void MoveWest()
+        {
+            if(HasLocationToWest)
+            {
+                CurrentLocation = CurrentWorld.LocationAt(CurrentLocation.XCoordinate - 1, CurrentLocation.YCoordinate);    
+            }
+        }
+
+        public void MoveEast()
+        {
+            if(HasLocationToEast)
+            {
+                CurrentLocation = CurrentWorld.LocationAt(CurrentLocation.XCoordinate + 1, CurrentLocation.YCoordinate);
+            }
         }
     }
 }

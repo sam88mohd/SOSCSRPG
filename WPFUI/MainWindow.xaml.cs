@@ -28,5 +28,22 @@ namespace WPFUI
             _gameSession = new GameSession();
             DataContext = _gameSession;
         }
+
+        private void onClick_MoveNorth(object sender, RoutedEventArgs e)
+        {
+            _gameSession.MoveNorth();
+        }
+        private void onClick_MoveEast(object sender, RoutedEventArgs e)
+        {
+            _gameSession.MoveEast();
+        }
+        private void onClick_MoveWest(object sender, RoutedEventArgs e)
+        {
+            _gameSession.MoveWest();
+        }
+        private void onClick_MoveSouth(object sender, RoutedEventArgs e)
+        {
+            _gameSession.MoveSouth();
+        }
     }
 }

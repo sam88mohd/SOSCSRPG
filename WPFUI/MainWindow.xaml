@@ -5,7 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFUI"
         mc:Ignorable="d"
-        Title="Samsudin Awesome Game" Height="768" Width="1024">
+        Title="Samsudin Awesome Game" Height="768" Width="1024" FontSize="11">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,13 +19,15 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="63.6"/>
+            <ColumnDefinition Width="186.4"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Menu" Background="AliceBlue"/>
-        <Grid Grid.Row="1" Grid.Column="0" Background="Aquamarine">
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="Menu" Background="AliceBlue" Margin="0,0,0,501" Grid.RowSpan="2"/>
+        <Grid Grid.Row="1" Grid.Column="0" Background="Aquamarine" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -45,10 +52,100 @@
             <Label Grid.Row="4" Grid.Column="1" Content="{Binding CurrentPlayer.ExperiencePoints}" />
             <Label Grid.Row="5" Grid.Column="0" Content="Level:" />
             <Label Grid.Row="5" Grid.Column="1" Content="{Binding CurrentPlayer.Level}" />
-
         </Grid>
-        <Label Grid.Row="1" Grid.Column="1" Content="Game Details" Background="Beige"/>
-        <Label Grid.Row="2" Grid.Column="0" Content="Inventory/Quest" Background="Bisque"/>
-        <Label Grid.Row="2" Grid.Column="1" Content="Movement/Combat" Background="Lavender"/>
+        <Grid Grid.Row="1" Grid.Column="2" Background="Beige">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Row="0" Grid.Column="1" BorderBrush="Gainsboro" BorderThickness="1">
+                <Grid Margin="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding CurrentLocation.Name}"/>
+                    <Image Grid.Row="1" HorizontalAlignment="Center" Height="125" VerticalAlignment="Center" Width="125" Source="{Binding CurrentLocation.ImageName}"/>
+                    <TextBlock Grid.Row="2" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Text="{Binding CurrentLocation.Descriptions}"/>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="Bisque">
+            <TabControl>
+                <TabItem Header="Inventory">
+                    <DataGrid ItemsSource="{Binding CurrentPlayer.Inventory}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Description" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="Auto"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+                <TabItem Header="Quest"></TabItem>
+            </TabControl>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="2" Background="Lavender">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button 
+                    Grid.Row="0" 
+                    Grid.Column="1" 
+                    Width="65" 
+                    Height="25"
+                    Margin="10"
+                    Visibility="{Binding HasLocationToNorth, Converter={StaticResource BooleanToVisibility}}"
+                    Click="onClick_MoveNorth"
+                    Content="North"/>
+                <Button 
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Width="65"
+                    Height="25"
+                    Margin="10"
+                    Visibility="{Binding HasLocationToEast, Converter={StaticResource BooleanToVisibility}}"
+                    Click="onClick_MoveEast"
+                    Content="East"/>
+                <Button 
+                    Grid.Row="1" 
+                    Grid.Column="0" 
+                    Width="65" 
+                    Height="25" 
+                    Margin="10"
+                    Visibility="{Binding HasLocationToWest, Converter={StaticResource BooleanToVisibility}}"
+                    Click="onClick_MoveWest"
+                    Content="West"/>
+                <Button 
+                    Grid.Row="2" 
+                    Grid.Column="1" 
+                    Width="65" 
+                    Height="25" 
+                    Margin="10" 
+                    Visibility="{Binding HasLocationToSouth, Converter={StaticResource BooleanToVisibility}}"
+                    Click="onClick_MoveSouth"
+                    Content="South"/>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
